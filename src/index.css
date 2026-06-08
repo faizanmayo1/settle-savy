@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* SettleSavvy — light proptech theme (shadcn semantic tokens, HSL channels) */
+
+    --background: 180 11% 97%;         /* canvas #F6F8F8 */
+    --foreground: 197 38% 10%;         /* ink #0F1B22 */
+
+    --card: 0 0% 100%;
+    --card-foreground: 197 38% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 197 38% 10%;
+
+    --primary: 174 78% 26%;            /* teal #0F766E */
+    --primary-foreground: 180 11% 97%;
+
+    --secondary: 180 14% 93%;
+    --secondary-foreground: 197 38% 10%;
+
+    --muted: 180 14% 94%;
+    --muted-foreground: 200 18% 30%;   /* ink muted #41525B */
+
+    --accent: 239 84% 67%;             /* iris #6366F1 — AI accent */
+    --accent-foreground: 180 11% 97%;
+
+    --destructive: 0 72% 51%;          /* signal risk #DC2626 */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 184 11% 90%;             /* hairline #E2E8E9 */
+    --input: 184 11% 90%;
+    --ring: 174 78% 26%;               /* focus = teal */
+
+    --radius: 0.625rem;                /* ~10px — soft proptech */
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+    font-feature-settings: 'ss01', 'cv11';
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Tabular numerals everywhere — terminal-grade numeric treatment */
+  .tabular,
+  [data-tabular] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Headings ride the body grotesk; display serif is opt-in via font-display */
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-ink tracking-tight-bank;
+    font-weight: 600;
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: hsl(174 78% 26% / 0.14);
+    color: hsl(197 38% 10%);
+  }
+
+  /* Custom subtle scrollbars */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(184 10% 78%);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(184 10% 62%);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+  }
+}
+
+@layer utilities {
+  /* Hairline divider — premium thinner than 1px on retina */
+  .divider-hairline {
+    background-image: linear-gradient(to right, transparent, hsl(184 14% 84%), transparent);
+    height: 1px;
+  }
+
+  /* Eyebrow / micro-label utility */
+  .eyebrow {
+    @apply text-[11px] font-medium uppercase tracking-wide-eyebrow text-ink-subtle;
+  }
+
+  /* Soft glow used for AI / brand pings */
+  .ring-teal-soft {
+    box-shadow: 0 0 0 4px hsl(174 78% 26% / 0.08);
+  }
+
+  /* SettleSavvy rule — teal→iris brand signature hairline */
+  .accent-rule {
+    background-image: linear-gradient(to right, #0F766E, #6366F1 55%, transparent);
+    height: 2px;
+  }
+
+  /* Aurora wash — used behind the AI generation flow while "thinking" */
+  .aurora-wash {
+    background:
+      radial-gradient(120% 80% at 12% 0%, hsl(174 78% 26% / 0.10), transparent 60%),
+      radial-gradient(120% 80% at 88% 10%, hsl(239 84% 67% / 0.12), transparent 60%);
+  }
+
+  /* Faint topographic / contour texture for hero blocks — proptech "map" feel */
+  .map-grid {
+    background-image:
+      linear-gradient(to right, hsl(184 14% 88% / 0.6) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(184 14% 88% / 0.6) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+}
