@@ -13,6 +13,7 @@ import {
 import { InsightRibbon } from '@/components/InsightRibbon'
 import { Meter } from '@/components/Meter'
 import { PageHeader } from '@/components/PageHeader'
+import { StatTile } from '@/components/StatTile'
 import { StatusBadge } from '@/components/StatusBadge'
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/components/ui/toast'
@@ -139,10 +140,10 @@ export function CommuteLifestyle() {
         <div className="flex min-w-0 flex-col gap-4">
           {/* KPI strip */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <KPI label="Unlocked" value={`${unlocked.length}`} hint={`of ${NEIGHBORHOODS.length}`} />
-            <KPI label="Median price" value={formatUSDCompact(medianUnlocked)} hint={priceDelta < 0 ? `${(priceDelta * 100).toFixed(0)}% vs 30 min` : 'baseline'} tone={priceDelta < 0 ? 'positive' : 'neutral'} />
-            <KPI label="Fastest" value={formatCommute(unlocked[0]?.commute.rush ?? 0)} hint={unlocked[0]?.name ?? '—'} />
-            <KPI label="New options" value={`+${newlyUnlockedIds.size}`} hint="beyond 30 min" tone={newlyUnlockedIds.size > 0 ? 'iris' : 'neutral'} />
+            <StatTile label="Unlocked" value={`${unlocked.length}`} hint={`of ${NEIGHBORHOODS.length}`} tone="teal" />
+            <StatTile label="Median price" value={formatUSDCompact(medianUnlocked)} hint={priceDelta < 0 ? `${(priceDelta * 100).toFixed(0)}% vs 30 min` : 'baseline'} tone={priceDelta < 0 ? 'positive' : 'default'} hintPositive={priceDelta < 0} />
+            <StatTile label="Fastest" value={formatCommute(unlocked[0]?.commute.rush ?? 0)} hint={unlocked[0]?.name ?? '—'} />
+            <StatTile label="New options" value={`+${newlyUnlockedIds.size}`} hint="beyond 30 min" tone={newlyUnlockedIds.size > 0 ? 'iris' : 'default'} />
           </div>
 
           {priceDelta < -0.02 && (
@@ -200,13 +201,3 @@ export function CommuteLifestyle() {
   )
 }
 
-function KPI({ label, value, hint, tone = 'neutral' }: { label: string; value: string; hint?: string; tone?: 'positive' | 'iris' | 'neutral' }) {
-  const toneClass = tone === 'positive' ? 'text-signal-positive' : tone === 'iris' ? 'text-iris-deep' : 'text-ink'
-  return (
-    <div className="rounded-xl border border-hairline bg-card p-3.5 shadow-card-sm">
-      <p className="text-[10.5px] uppercase tracking-wide-eyebrow text-ink-subtle">{label}</p>
-      <p className={cn('mt-1 font-mono text-[20px] font-semibold tabular', toneClass)}>{value}</p>
-      {hint && <p className="text-[10.5px] text-ink-subtle">{hint}</p>}
-    </div>
-  )
-}

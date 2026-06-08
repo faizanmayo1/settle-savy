@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 
 import { AIGenerationFlow, type AIStep } from '@/components/AIGenerationFlow'
+import { DataFusionBar } from '@/components/DataFusionBar'
 import { AgentSuggestionCard } from '@/components/copilot/AgentSuggestionCard'
 import { BuyerDNAPanel } from '@/components/copilot/BuyerDNAPanel'
 import { NeighborhoodMatchCard } from '@/components/copilot/NeighborhoodMatchCard'
@@ -82,6 +83,8 @@ export function RelocationCopilot() {
           <Plus className="h-3.5 w-3.5" /> New brief
         </Button>
       </header>
+
+      <DataFusionBar />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
         {/* Main column */}

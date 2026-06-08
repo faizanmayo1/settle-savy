@@ -1,13 +1,13 @@
 import { Clock, Flame, Sparkles, TrendingUp, Users, Wallet } from 'lucide-react'
 
 import { PageHeader } from '@/components/PageHeader'
+import { StatTile } from '@/components/StatTile'
 import { ScoreRing } from '@/components/copilot/ScoreRing'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast'
 import { COMMAND_KPIS, EXPERTISE, LEADS, type Lead } from '@/data/command'
 import { formatPercent, formatUSDCompact } from '@/utils/format'
-import { cn } from '@/utils/cn'
 
 export function AgentCommandCenter() {
   const { toast } = useToast()
@@ -32,10 +32,10 @@ export function AgentCommandCenter() {
 
       {/* KPI strip */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <KPI label="90%+ ready" value={`${hot.length}`} hint="in your specialty areas" tone="iris" icon={Flame} />
-        <KPI label="Pipeline value" value={formatUSDCompact(k.pipelineValue)} hint="active buyers" tone="teal" icon={Wallet} />
-        <KPI label="Avg conversion" value={formatPercent(k.avgConversion)} hint="probability" tone="positive" icon={TrendingUp} />
-        <KPI label="Avg readiness" value={`${k.avgReadiness}`} hint="top of funnel strong" tone="teal" icon={Users} />
+        <StatTile label="90%+ ready" value={`${hot.length}`} hint="in your specialty areas" tone="iris" icon={Flame} />
+        <StatTile label="Pipeline value" value={formatUSDCompact(k.pipelineValue)} hint="active buyers" tone="teal" icon={Wallet} />
+        <StatTile label="Avg conversion" value={formatPercent(k.avgConversion)} hint="probability" tone="positive" icon={TrendingUp} />
+        <StatTile label="Avg readiness" value={`${k.avgReadiness}`} hint="top of funnel strong" tone="teal" icon={Users} />
       </div>
 
       {/* Hot banner */}
@@ -150,16 +150,3 @@ function LeadRow({ lead, onAct }: { lead: Lead; onAct: () => void }) {
   )
 }
 
-function KPI({ label, value, hint, tone, icon: Icon }: { label: string; value: string; hint?: string; tone: 'iris' | 'teal' | 'positive'; icon: typeof Users }) {
-  const toneClass = { iris: 'text-iris-deep', teal: 'text-teal', positive: 'text-signal-positive' }[tone]
-  return (
-    <div className="rounded-xl border border-hairline bg-card p-4 shadow-card-sm">
-      <div className="flex items-center justify-between">
-        <p className="text-[10.5px] uppercase tracking-wide-eyebrow text-ink-subtle">{label}</p>
-        <Icon className="h-3.5 w-3.5 text-ink-faint" />
-      </div>
-      <p className={cn('mt-1.5 font-mono text-[22px] font-semibold tabular', toneClass)}>{value}</p>
-      {hint && <p className="text-[10.5px] text-ink-subtle">{hint}</p>}
-    </div>
-  )
-}

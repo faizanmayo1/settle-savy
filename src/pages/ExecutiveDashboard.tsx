@@ -12,6 +12,7 @@ import { Activity, BarChart3, Target, TrendingUp, Users } from 'lucide-react'
 import { ChartCard } from '@/components/ChartCard'
 import { ChartTooltip } from '@/components/charts/ChartTooltip'
 import { PageHeader } from '@/components/PageHeader'
+import { StatTile } from '@/components/StatTile'
 import { ScoreRing } from '@/components/copilot/ScoreRing'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -28,6 +29,7 @@ import { cn } from '@/utils/cn'
 export function ExecutiveDashboard() {
   const k = EXEC_KPIS
   const maxConv = Math.max(...TOP_NEIGHBORHOODS.map((n) => n.conversion))
+  const leaderboard = [...AGENT_LEADERBOARD].sort((a, b) => b.deals - a.deals)
 
   return (
     <div className="mx-auto flex w-full max-w-[1380px] flex-col gap-6 animate-fade-in">
@@ -42,10 +44,10 @@ export function ExecutiveDashboard() {
 
       {/* KPI strip */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <KPI label="Active buyers" value={formatCompact(k.activeBuyers)} hint="this month" icon={Users} />
-        <KPI label="Conversion rate" value={formatPercent(k.conversionRate)} hint={`▲ ${(k.conversionDelta * 100).toFixed(1)}pts YoY`} tone="positive" icon={TrendingUp} />
-        <KPI label="GMV" value={formatUSDCompact(k.gmv)} hint="closed volume" icon={BarChart3} />
-        <KPI label="Prediction accuracy" value={formatPercent(k.predictionAccuracy)} hint="fit-score vs outcome" tone="iris" icon={Target} />
+        <StatTile label="Active buyers" value={formatCompact(k.activeBuyers)} hint="this month" icon={Users} />
+        <StatTile label="Conversion rate" value={formatPercent(k.conversionRate)} hint={`▲ ${(k.conversionDelta * 100).toFixed(1)}pts YoY`} tone="positive" hintPositive icon={TrendingUp} />
+        <StatTile label="GMV" value={formatUSDCompact(k.gmv)} hint="closed volume" icon={BarChart3} />
+        <StatTile label="Prediction accuracy" value={formatPercent(k.predictionAccuracy)} hint="fit-score vs outcome" tone="iris" icon={Target} />
       </div>
 
       {/* Conversion trend + top neighborhoods */}
@@ -120,7 +122,7 @@ export function ExecutiveDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {AGENT_LEADERBOARD.map((a, i) => (
+                {leaderboard.map((a, i) => (
                   <tr key={a.name} className="border-b border-hairline last:border-0 hover:bg-canvas-subtle/50">
                     <td className="px-4 py-2.5">
                       <div className="flex items-center gap-2.5">
@@ -203,16 +205,3 @@ export function ExecutiveDashboard() {
   )
 }
 
-function KPI({ label, value, hint, tone = 'neutral', icon: Icon }: { label: string; value: string; hint?: string; tone?: 'positive' | 'iris' | 'neutral'; icon: typeof Users }) {
-  const toneClass = tone === 'positive' ? 'text-signal-positive' : tone === 'iris' ? 'text-iris-deep' : 'text-ink'
-  return (
-    <div className="rounded-xl border border-hairline bg-card p-4 shadow-card-sm">
-      <div className="flex items-center justify-between">
-        <p className="text-[10.5px] uppercase tracking-wide-eyebrow text-ink-subtle">{label}</p>
-        <Icon className="h-3.5 w-3.5 text-ink-faint" />
-      </div>
-      <p className={cn('mt-1.5 font-mono text-[22px] font-semibold tabular', toneClass)}>{value}</p>
-      {hint && <p className={cn('text-[10.5px]', tone === 'positive' ? 'text-signal-positive' : 'text-ink-subtle')}>{hint}</p>}
-    </div>
-  )
-}

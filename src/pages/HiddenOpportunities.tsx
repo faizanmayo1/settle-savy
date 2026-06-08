@@ -2,6 +2,7 @@ import { Bell, Clock, Gem, Sparkles, TrendingDown } from 'lucide-react'
 
 import { ListingThumb } from '@/components/ListingThumb'
 import { PageHeader } from '@/components/PageHeader'
+import { StatTile } from '@/components/StatTile'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/toast'
@@ -42,10 +43,10 @@ export function HiddenOpportunities() {
 
       {/* KPI strip */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <KPI label="Opportunities" value={`${OPPORTUNITIES.length + 1}`} hint="in your areas" tone="iris" />
-        <KPI label="Avg discount" value={formatPercent(avgDiscount)} hint="vs fair value" tone="positive" />
-        <KPI label="Drops predicted" value={`${dropLikely}`} hint="within 2 weeks" tone="warning" />
-        <KPI label="DOM anomalies" value={`${anomalies + 1}`} hint="stale vs area" tone="info" />
+        <StatTile label="Opportunities" value={`${OPPORTUNITIES.length + 1}`} hint="in your areas" tone="iris" />
+        <StatTile label="Avg discount" value={formatPercent(avgDiscount)} hint="vs fair value" tone="positive" />
+        <StatTile label="Drops predicted" value={`${dropLikely}`} hint="within 2 weeks" tone="warning" />
+        <StatTile label="DOM anomalies" value={`${anomalies + 1}`} hint="stale vs area" tone="info" />
       </div>
 
       {/* Featured */}
@@ -157,13 +158,3 @@ export function HiddenOpportunities() {
   )
 }
 
-function KPI({ label, value, hint, tone }: { label: string; value: string; hint?: string; tone: 'positive' | 'warning' | 'iris' | 'info' }) {
-  const toneClass = { positive: 'text-signal-positive', warning: 'text-signal-warning', iris: 'text-iris-deep', info: 'text-signal-info' }[tone]
-  return (
-    <div className="rounded-xl border border-hairline bg-card p-4 shadow-card-sm">
-      <p className="text-[10.5px] uppercase tracking-wide-eyebrow text-ink-subtle">{label}</p>
-      <p className={cn('mt-1 font-mono text-[22px] font-semibold tabular', toneClass)}>{value}</p>
-      {hint && <p className="text-[10.5px] text-ink-subtle">{hint}</p>}
-    </div>
-  )
-}

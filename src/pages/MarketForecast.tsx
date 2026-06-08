@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import {
-  Area,
   CartesianGrid,
-  ComposedChart,
   Line,
+  LineChart,
+  ReferenceArea,
   ReferenceLine,
   ResponsiveContainer,
   Tooltip,
@@ -16,6 +16,7 @@ import { ChartCard } from '@/components/ChartCard'
 import { ChartTooltip } from '@/components/charts/ChartTooltip'
 import { InsightRibbon } from '@/components/InsightRibbon'
 import { PageHeader } from '@/components/PageHeader'
+import { StatTile } from '@/components/StatTile'
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/components/ui/toast'
 import { FORECAST, MARKET_SIGNALS, RENT_VS_BUY, monthlyPayment } from '@/data/market'
@@ -45,31 +46,26 @@ export function MarketForecast() {
 
       {/* KPI strip */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <KPI label="18-mo appreciation" value={`+${Math.round(s.appreciation18mo * 100)}%`} hint="modelled, mid-case" tone="positive" icon={TrendingUp} />
-        <KPI label="Inventory" value={`${s.inventoryMonths} mo`} hint={`${Math.round(s.inventoryTrend * 100)}% YoY · tightening`} tone="warning" icon={Activity} />
-        <KPI label="Demand vs supply" value={`${s.demandIndex} / ${s.supplyIndex}`} hint="seller's market" tone="iris" icon={Gauge} />
-        <KPI label="Optimal window" value={`${s.optimalWindowDays} days`} hint="entry before lift" tone="positive" icon={CalendarClock} />
+        <StatTile label="18-mo appreciation" value={`+${Math.round(s.appreciation18mo * 100)}%`} hint="modelled, mid-case" tone="positive" icon={TrendingUp} />
+        <StatTile label="Inventory" value={`${s.inventoryMonths} mo`} hint={`${Math.round(s.inventoryTrend * 100)}% YoY · tightening`} tone="warning" icon={Activity} />
+        <StatTile label="Demand vs supply" value={`${s.demandIndex} / ${s.supplyIndex}`} hint="seller's market" tone="iris" icon={Gauge} />
+        <StatTile label="Optimal window" value={`${s.optimalWindowDays} days`} hint="entry before lift" tone="positive" icon={CalendarClock} />
       </div>
 
       {/* Forecast chart */}
       <ChartCard
         eyebrow="Appreciation model"
         title="Projected price index · next 18 months"
-        subtitle="Solid line is actual to today; dashed is the forecast mid-case with a shaded confidence band."
+        subtitle="Solid teal is actual to today; dashed iris is the forecast mid-case. The shaded band marks the forecast horizon — hover for the bull/bear range."
         bodyClassName="px-2"
       >
         <div className="h-[320px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={FORECAST} margin={{ top: 12, right: 16, left: 4, bottom: 4 }}>
-              <defs>
-                <linearGradient id="bandfill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#6366F1" stopOpacity={0.16} />
-                  <stop offset="100%" stopColor="#6366F1" stopOpacity={0.04} />
-                </linearGradient>
-              </defs>
+            <LineChart data={FORECAST} margin={{ top: 12, right: 16, left: 4, bottom: 4 }}>
               <CartesianGrid stroke="#ECEFEF" strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#6B7C85' }} tickLine={false} axisLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#6B7C85' }} tickLine={false} axisLine={false} domain={[98, 122]} width={32} />
+              <YAxis tick={{ fontSize: 11, fill: '#6B7C85' }} tickLine={false} axisLine={false} domain={[98, 124]} width={32} />
+              <ReferenceArea x1="Jun" x2="Jun'" fill="#6366F1" fillOpacity={0.05} />
               <ReferenceLine x="Jun" stroke="#A6B3BA" strokeDasharray="4 4" label={{ value: 'Today', position: 'insideTopRight', fontSize: 10, fill: '#6B7C85' }} />
               <Tooltip
                 cursor={{ stroke: '#CFD8D9' }}
@@ -85,12 +81,9 @@ export function MarketForecast() {
                   return <ChartTooltip active={active} title={String(label)} rows={rows} />
                 }}
               />
-              {/* confidence band via stacked areas (low transparent + band visible) */}
-              <Area dataKey="low" stackId="band" stroke="none" fill="transparent" isAnimationActive={false} />
-              <Area dataKey="band" stackId="band" stroke="none" fill="url(#bandfill)" isAnimationActive={false} />
               <Line dataKey="actual" stroke="#0F766E" strokeWidth={2.4} dot={false} isAnimationActive={false} connectNulls />
               <Line dataKey="mid" stroke="#6366F1" strokeWidth={2} strokeDasharray="5 4" dot={false} isAnimationActive={false} connectNulls />
-            </ComposedChart>
+            </LineChart>
           </ResponsiveContainer>
         </div>
       </ChartCard>
@@ -162,20 +155,6 @@ export function MarketForecast() {
           </div>
         </section>
       </div>
-    </div>
-  )
-}
-
-function KPI({ label, value, hint, tone, icon: Icon }: { label: string; value: string; hint?: string; tone: 'positive' | 'warning' | 'iris'; icon: typeof TrendingUp }) {
-  const toneClass = tone === 'positive' ? 'text-signal-positive' : tone === 'warning' ? 'text-signal-warning' : 'text-iris-deep'
-  return (
-    <div className="rounded-xl border border-hairline bg-card p-4 shadow-card-sm">
-      <div className="flex items-center justify-between">
-        <p className="text-[10.5px] uppercase tracking-wide-eyebrow text-ink-subtle">{label}</p>
-        <Icon className="h-3.5 w-3.5 text-ink-faint" />
-      </div>
-      <p className={cn('mt-1.5 font-mono text-[22px] font-semibold tabular', toneClass)}>{value}</p>
-      {hint && <p className="text-[10.5px] text-ink-subtle">{hint}</p>}
     </div>
   )
 }

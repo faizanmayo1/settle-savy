@@ -13,6 +13,7 @@ import {
 import { Check, GraduationCap, Plus, TrendingUp } from 'lucide-react'
 
 import { ChartCard } from '@/components/ChartCard'
+import { DataFusionBar } from '@/components/DataFusionBar'
 import { ChartTooltip } from '@/components/charts/ChartTooltip'
 import { InsightRibbon } from '@/components/InsightRibbon'
 import { Meter } from '@/components/Meter'
@@ -70,6 +71,8 @@ export function NeighborhoodIntelligence() {
           </Button>
         }
       />
+
+      <DataFusionBar />
 
       {/* Selector */}
       <div className="flex flex-wrap items-center gap-2">
